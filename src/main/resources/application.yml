@@ -19,3 +19,6 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: ASSIGN_ID
+
+reggis:
+  path: D:\\Develop\\ruijiwaimai\\src\\main\\java\\com\\reggie\\img\\

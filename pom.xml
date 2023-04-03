@@ -70,6 +70,11 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.23</version>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.4.2</version>
+        </dependency>
 
     </dependencies>
 
