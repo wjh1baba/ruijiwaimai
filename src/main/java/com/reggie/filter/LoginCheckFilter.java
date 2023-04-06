@@ -34,7 +34,9 @@ public class LoginCheckFilter implements Filter {
                 "/employee/logout",
                 "/backend/**",
                 "/front/**",
-                "/common/**"
+                "/common/**",
+                "/user/sendMsg", //移动端发送短信
+                "/user/login"    //移动登录
         };
 
         //2.进行路径匹配,判断请求是否需要处理  下面写好了方法
@@ -53,6 +55,17 @@ public class LoginCheckFilter implements Filter {
 
             Long id = (Long) request.getSession().getAttribute("employee");
             BaseContext.setThreadLocal(id);
+
+            filterChain.doFilter(request,response);
+            return;
+        }
+
+        //4.2   移动端 判断是否登录状态,如果是登录状态，则直接放行
+        if(request.getSession().getAttribute("user")!= null){
+            log.info("用户已登录,用户id为{}",request.getSession().getAttribute("user"));
+
+            Long Userid = (Long) request.getSession().getAttribute("user");
+            BaseContext.setThreadLocal(Userid);
 
             filterChain.doFilter(request,response);
             return;

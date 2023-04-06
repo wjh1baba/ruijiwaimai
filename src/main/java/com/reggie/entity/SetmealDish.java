@@ -1,4 +1,4 @@
-package com.reggie.dto;
+package com.reggie.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -34,7 +34,6 @@ public class SetmealDish implements Serializable {
 
     //份数
     private Integer copies;
-
 
     //排序
     private Integer sort;
