@@ -14,6 +14,9 @@ import com.reggie.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -23,6 +26,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/setmeal")
 public class SetmealController {
+    @Autowired
+    private CacheManager cacheManager;
 
     @Autowired
     private SetmealService setmealService;
@@ -34,6 +39,7 @@ public class SetmealController {
     private CategoryService categoryService;
 
     @PostMapping
+    @CacheEvict(value = "setmealCache",allEntries = true)
     public R<String> save(@RequestBody SetmealDto setmealDto){
         log.info("setmealDto:{}",setmealDto);
         setmealService.SaveWithSetmeal(setmealDto);
@@ -77,8 +83,44 @@ public class SetmealController {
     }
 
     @DeleteMapping
+    @CacheEvict(value = "setmealCache",allEntries = true)
     public R<String> delect(@RequestParam List<Long> ids){
         setmealService.removeWithSetmeal(ids);
         return R.success("删除成功");
+    }
+
+
+    @GetMapping("/list")
+    @Cacheable(value = "setmealCache",key="#setmeal.categoryId+'_'+#setmeal.status")
+    public R<List<Setmeal>> listR(Setmeal setmeal){
+        LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(setmeal.getCategoryId()!=null,Setmeal::getCategoryId,setmeal.getCategoryId());
+        queryWrapper.eq(setmeal.getStatus()!=null,Setmeal::getStatus,setmeal.getStatus());
+        queryWrapper.orderByDesc(Setmeal::getUpdateTime);
+        List<Setmeal> list = setmealService.list(queryWrapper);
+        return R.success(list);
+    }
+
+    @PostMapping("/status/0")
+    public R<String> upstatus0(@RequestParam List<Long> ids){
+        log.info("ids={}",ids);
+        for (Long id : ids) {
+            Setmeal setmeal = setmealService.getById(id);
+            setmeal.setStatus(0);
+            setmealService.updateById(setmeal);
+        }
+        return R.success("状态修改成功");
+    }
+
+
+    @PostMapping("/status/1")
+    public R<String> upstatus1(@RequestParam List<Long> ids){
+        log.info("ids={}",ids);
+        for (Long id : ids) {
+            Setmeal setmeal = setmealService.getById(id);
+            setmeal.setStatus(1);
+            setmealService.updateById(setmeal);
+        }
+        return R.success("状态修改成功");
     }
 }

@@ -1,5 +1,10 @@
 package com.reggie.common;
 
+
+/**
+ * ThreadLocal叫做线程变量，意思是ThreadLocal中填充的变量属于当前线程，对其他线程隔离
+ * **/
+
 public class BaseContext {
     private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
 

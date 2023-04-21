@@ -25,8 +25,8 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/login")
-    public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee){
 
+    public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee){
         //1.将前端传来的密码进行md5加密处理
         String password = employee.getPassword();
         password = DigestUtils.md5DigestAsHex(password.getBytes());
@@ -103,11 +103,7 @@ public class EmployeeController {
     }
 
     @PutMapping
-    public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
-        log.info(employee.toString());
-        Long attribute = (Long) request.getSession().getAttribute("employee");
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(attribute);
+    public R<String> update(@RequestBody Employee employee){
         employeeService.updateById(employee);
         return R.success("员工状态修改成功");
     }

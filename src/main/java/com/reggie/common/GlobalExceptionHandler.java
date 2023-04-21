@@ -15,10 +15,11 @@ import java.sql.SQLIntegrityConstraintViolationException;
 @Slf4j
 public class GlobalExceptionHandler {
 
-
+    //自定义异常处理器
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public R<String> ExceptionHandler(SQLIntegrityConstraintViolationException ex){
         log.info(ex.getMessage());
+        //如果包含"Duplicate entry"就执行，把字符串切割输出
         if(ex.getMessage().contains("Duplicate entry")){
             String[] split = ex.getMessage().split(" ");
             String msg = split[2] + "已存在";

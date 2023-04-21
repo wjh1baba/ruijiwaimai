@@ -60,7 +60,7 @@ public class CategoryController {
         //条件构造器
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         //添加条件
-        queryWrapper.eq(Category::getType,category.getType());
+        queryWrapper.eq(category.getType() != null,Category::getType,category.getType());
         //添加排序条件
         queryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
 

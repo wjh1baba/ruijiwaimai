@@ -33,9 +33,9 @@ public class DishServiceimpl extends ServiceImpl<DishMapper,Dish> implements Dis
     @Autowired
     private CategoryService categoryService;
 
-
     @Override
     @Transactional
+    //给口味表绑定菜品
     public void saveWithFlavor(DishDto dishDto) {
         //保存菜品的基本信息到菜品表dish
         this.save(dishDto);
@@ -49,6 +49,7 @@ public class DishServiceimpl extends ServiceImpl<DishMapper,Dish> implements Dis
         dishFlavorService.saveBatch(flavorList);
     }
 
+    //修改页页面回显
     public DishDto getByIdwithFlavor(Long id){
         //查询基本信息
         Dish dish = this.getById(id);
@@ -67,6 +68,7 @@ public class DishServiceimpl extends ServiceImpl<DishMapper,Dish> implements Dis
         return dishDto;
     }
 
+    //修改
     @Override
     @Transactional  //保证数据的一致性
     public void updatewithFlavor(DishDto dishDto) {
@@ -83,5 +85,16 @@ public class DishServiceimpl extends ServiceImpl<DishMapper,Dish> implements Dis
         }
         dishFlavorService.saveBatch(flavorList);
     }
+
+    //删除
+    @Override
+    public void delectWithFlavor(Long id) {
+        dishService.removeById(id);
+
+        LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(id != null,DishFlavor::getDishId,id);
+        dishFlavorService.remove(queryWrapper);
+    }
+
 
 }
